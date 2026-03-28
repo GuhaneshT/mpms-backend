@@ -7,10 +7,15 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
 
-# Set all CORS enabled origins
+origins = [
+    "http://localhost:5173",
+    "https://mpms-frontend-zeta.vercel.app",
+    settings.FRONTEND_URL.rstrip("/")
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
