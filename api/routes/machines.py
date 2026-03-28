@@ -3,10 +3,10 @@ from supabase import Client
 from uuid import UUID
 from typing import List
 
-from backend.database.session import get_supabase
-from backend.schemas.machine import MachineCreate, MachineUpdate, MachineResponse
-from backend.services.machine import MachineService
-from backend.api.deps import get_current_user
+from database.session import get_supabase
+from schemas.machine import MachineCreate, MachineUpdate, MachineResponse
+from services.machine import MachineService
+from api.deps import get_current_user
 
 router = APIRouter(prefix="/machines", tags=["Machines"])
 

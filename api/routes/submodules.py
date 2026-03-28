@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, status
 from supabase import Client
 from uuid import UUID
 
-from backend.database.session import get_supabase
-from backend.api.deps import get_current_user
-from backend.repositories.submodules import SUBMODULE_TABLES
-from backend.schemas import submodules as schemas
-from backend.services.submodules import SubmoduleService
+from database.session import get_supabase
+from api.deps import get_current_user
+from repositories.submodules import SUBMODULE_TABLES
+from schemas import submodules as schemas
+from services.submodules import SubmoduleService
 
 router = APIRouter(prefix="/orders", tags=["Order Submodules"])
 

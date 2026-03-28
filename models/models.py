@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import Column, String, Text, Boolean, DateTime, ForeignKey, Enum, JSON, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-from backend.models.base import Base
+from models.base import Base
 
 class OrderStatus(enum.Enum):
     order_received = 'order_received'

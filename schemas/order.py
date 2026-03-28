@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID
 from datetime import datetime
-from backend.schemas.enums import OrderStatus
+from schemas.enums import OrderStatus
 
 class OrderBase(BaseModel):
     customer_id: UUID

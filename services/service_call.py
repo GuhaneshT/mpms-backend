@@ -1,8 +1,8 @@
 from supabase import Client
 from fastapi import HTTPException
 from uuid import UUID
-from backend.repositories.service_call import ServiceCallRepository
-from backend.schemas.service_call import ServiceCallCreate, ServiceCallUpdate
+from repositories.service_call import ServiceCallRepository
+from schemas.service_call import ServiceCallCreate, ServiceCallUpdate
 
 
 class ServiceCallService:

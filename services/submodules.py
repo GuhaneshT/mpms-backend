@@ -1,7 +1,7 @@
 from supabase import Client
 from fastapi import HTTPException
 from uuid import UUID
-from backend.repositories.submodules import SubmoduleRepository
+from repositories.submodules import SubmoduleRepository
 
 
 class SubmoduleService:

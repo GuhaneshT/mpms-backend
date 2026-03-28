@@ -2,7 +2,7 @@ import httpx
 import time
 from jose import jwt, jwk, JWTError
 from fastapi import HTTPException, status
-from backend.core.config import settings
+from core.config import settings
 
 # Simple JWKS Cache
 _jwks_cache: dict = {"keys": [], "last_updated": 0.0}

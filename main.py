@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.core.config import settings
+from core.config import settings
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -20,7 +20,7 @@ app.add_middleware(
 def health_check():
     return {"status": "ok", "app": settings.PROJECT_NAME}
 
-from backend.api.routes import customers, orders, machines, submodules, service_calls, dashboard, users
+from api.routes import customers, orders, machines, submodules, service_calls, dashboard, users
 
 app.include_router(customers.router, prefix=settings.API_V1_STR)
 app.include_router(orders.router, prefix=settings.API_V1_STR)

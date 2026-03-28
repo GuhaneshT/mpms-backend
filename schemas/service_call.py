@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, Any
 from uuid import UUID
 from datetime import datetime
-from backend.schemas.enums import ServiceDepartment, ServiceStatus
+from schemas.enums import ServiceDepartment, ServiceStatus
 
 class ServiceCallBase(BaseModel):
     machine_id: UUID

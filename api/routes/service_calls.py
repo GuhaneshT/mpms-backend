@@ -3,10 +3,10 @@ from supabase import Client
 from uuid import UUID
 from typing import List
 
-from backend.database.session import get_supabase
-from backend.schemas.service_call import ServiceCallCreate, ServiceCallUpdate, ServiceCallResponse
-from backend.services.service_call import ServiceCallService
-from backend.api.deps import get_current_user
+from database.session import get_supabase
+from schemas.service_call import ServiceCallCreate, ServiceCallUpdate, ServiceCallResponse
+from services.service_call import ServiceCallService
+from api.deps import get_current_user
 
 router = APIRouter(prefix="/service-calls", tags=["Service Calls"])
 

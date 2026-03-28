@@ -1,8 +1,8 @@
 from supabase import Client
 from fastapi import HTTPException
 from uuid import UUID
-from backend.repositories.customer import CustomerRepository
-from backend.schemas.customer import CustomerCreate, CustomerUpdate
+from repositories.customer import CustomerRepository
+from schemas.customer import CustomerCreate, CustomerUpdate
 
 
 class CustomerService:

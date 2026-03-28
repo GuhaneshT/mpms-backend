@@ -1,5 +1,5 @@
 from supabase import Client
-from backend.schemas.service_call import ServiceCallCreate, ServiceCallUpdate
+from schemas.service_call import ServiceCallCreate, ServiceCallUpdate
 from uuid import UUID
 
 

@@ -1,5 +1,5 @@
 from supabase import Client
-from backend.schemas.order import OrderCreate, OrderUpdate
+from schemas.order import OrderCreate, OrderUpdate
 from uuid import UUID
 
 

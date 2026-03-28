@@ -1,5 +1,5 @@
 from supabase import Client
-from backend.schemas.customer import CustomerCreate, CustomerUpdate
+from schemas.customer import CustomerCreate, CustomerUpdate
 from uuid import UUID
 
 

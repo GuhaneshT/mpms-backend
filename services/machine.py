@@ -1,8 +1,8 @@
 from supabase import Client
 from fastapi import HTTPException
 from uuid import UUID
-from backend.repositories.machine import MachineRepository
-from backend.schemas.machine import MachineCreate, MachineUpdate
+from repositories.machine import MachineRepository
+from schemas.machine import MachineCreate, MachineUpdate
 
 
 class MachineService:

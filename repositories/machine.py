@@ -1,5 +1,5 @@
 from supabase import Client
-from backend.schemas.machine import MachineCreate, MachineUpdate
+from schemas.machine import MachineCreate, MachineUpdate
 from uuid import UUID
 
 

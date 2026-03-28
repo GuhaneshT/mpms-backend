@@ -1,8 +1,8 @@
 from supabase import Client
 from fastapi import HTTPException
 from uuid import UUID
-from backend.repositories.order import OrderRepository
-from backend.schemas.order import OrderCreate, OrderUpdate
+from repositories.order import OrderRepository
+from schemas.order import OrderCreate, OrderUpdate
 
 
 class OrderService:

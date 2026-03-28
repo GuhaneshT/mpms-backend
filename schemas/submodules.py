@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, Any, List
 from uuid import UUID
 from datetime import datetime
-from backend.schemas.enums import SiteVerificationStatus
+from schemas.enums import SiteVerificationStatus
 
 # Production Chart
 class ProductionChartBase(BaseModel):

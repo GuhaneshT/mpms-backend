@@ -3,10 +3,10 @@ from supabase import Client
 from uuid import UUID
 from typing import List
 
-from backend.database.session import get_supabase
-from backend.schemas.order import OrderCreate, OrderUpdate, OrderResponse
-from backend.services.order import OrderService
-from backend.api.deps import get_current_user
+from database.session import get_supabase
+from schemas.order import OrderCreate, OrderUpdate, OrderResponse
+from services.order import OrderService
+from api.deps import get_current_user
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 

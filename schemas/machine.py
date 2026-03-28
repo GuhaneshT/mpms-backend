@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID
 from datetime import datetime
-from backend.schemas.enums import MachineStatus
+from schemas.enums import MachineStatus
 
 class MachineBase(BaseModel):
     order_id: UUID

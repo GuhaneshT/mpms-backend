@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 from supabase import Client
 from datetime import datetime, timedelta, timezone
 
-from backend.database.session import get_supabase
-from backend.api.deps import get_current_user
-from backend.schemas.dashboard import DashboardSummary, DashboardReliability, ReliabilityStat
+from database.session import get_supabase
+from api.deps import get_current_user
+from schemas.dashboard import DashboardSummary, DashboardReliability, ReliabilityStat
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
