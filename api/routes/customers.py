@@ -4,7 +4,7 @@ from uuid import UUID
 from typing import List
 
 from database.session import get_supabase
-from schemas.customer import CustomerCreate, CustomerUpdate, CustomerResponse
+from schemas.customer import CustomerCreate, CustomerUpdate, CustomerResponse, CustomerContactCreate, CustomerContactResponse
 from services.customer import CustomerService
 from api.deps import get_current_user
 
@@ -56,3 +56,33 @@ def delete_customer(
 ):
     service = CustomerService(client)
     service.delete_customer(customer_id)
+
+
+# ── Contact sub-routes ────────────────────────────────────────────────────────
+
+@router.get("/{customer_id}/contacts", response_model=List[CustomerContactResponse])
+def list_contacts(
+    customer_id: UUID,
+    client: Client = Depends(get_supabase),
+    current_user: dict = Depends(get_current_user)
+):
+    return CustomerService(client).list_contacts(customer_id)
+
+@router.post("/{customer_id}/contacts", response_model=CustomerContactResponse, status_code=status.HTTP_201_CREATED)
+def add_contact(
+    customer_id: UUID,
+    contact_in: CustomerContactCreate,
+    client: Client = Depends(get_supabase),
+    current_user: dict = Depends(get_current_user)
+):
+    return CustomerService(client).add_contact(customer_id, contact_in)
+
+@router.delete("/{customer_id}/contacts/{contact_id}", status_code=status.HTTP_204_NO_CONTENT)
+def remove_contact(
+    customer_id: UUID,
+    contact_id: UUID,
+    client: Client = Depends(get_supabase),
+    current_user: dict = Depends(get_current_user)
+):
+    CustomerService(client).remove_contact(customer_id, contact_id)
+

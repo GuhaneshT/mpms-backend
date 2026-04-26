@@ -1,11 +1,18 @@
 from pydantic import BaseModel
-from typing import Optional, Any, List
+from typing import Optional, Any, List, Literal
 from uuid import UUID
 from datetime import datetime
 from schemas.enums import SiteVerificationStatus
 
-# Production Chart
+
+# ── Production Chart ──────────────────────────────────────────────────────────
+
 class ProductionChartBase(BaseModel):
+    chart_ref_no: Optional[str] = None
+    machines: Optional[List[Any]] = []
+    unit: Optional[Literal["nos", "g", "l"]] = "nos"
+    accessories: Optional[List[str]] = []
+    requirements: Optional[List[str]] = []
     notes: Optional[str] = None
     chart_data: Optional[Any] = None
 
@@ -21,7 +28,9 @@ class ProductionChartResponse(ProductionChartBase):
     created_at: datetime
     model_config = {"from_attributes": True}
 
-# Ancillary Equipment
+
+# ── Ancillary Equipment ───────────────────────────────────────────────────────
+
 class AncillaryEquipmentBase(BaseModel):
     items: Any
     notes: Optional[str] = None
@@ -38,7 +47,9 @@ class AncillaryEquipmentResponse(AncillaryEquipmentBase):
     created_at: datetime
     model_config = {"from_attributes": True}
 
-# Site Verification
+
+# ── Site Verification ─────────────────────────────────────────────────────────
+
 class SiteVerificationBase(BaseModel):
     layout_notes: Optional[str] = None
     floor_dimensions: Optional[str] = None
@@ -57,7 +68,9 @@ class SiteVerificationResponse(SiteVerificationBase):
     created_at: datetime
     model_config = {"from_attributes": True}
 
-# Packing List
+
+# ── Packing List ──────────────────────────────────────────────────────────────
+
 class PackingListBase(BaseModel):
     accessories: Optional[Any] = None
     notes: Optional[str] = None
@@ -74,9 +87,17 @@ class PackingListResponse(PackingListBase):
     created_at: datetime
     model_config = {"from_attributes": True}
 
-# Material Verification
+
+# ── Material Verification ─────────────────────────────────────────────────────
+
+class ChecklistItem(BaseModel):
+    item: str
+    category: str  # "accessory" | "requirement"
+    checked: bool = False
+
 class MaterialVerificationBase(BaseModel):
     is_verified: Optional[bool] = False
+    checklist: Optional[List[ChecklistItem]] = []
     notes: Optional[str] = None
 
 class MaterialVerificationCreate(MaterialVerificationBase):
@@ -91,10 +112,13 @@ class MaterialVerificationResponse(MaterialVerificationBase):
     verified_at: Optional[datetime] = None
     model_config = {"from_attributes": True}
 
-# Installation Record
+
+# ── Installation Record ───────────────────────────────────────────────────────
+
 class InstallationRecordBase(BaseModel):
     installed_by: Optional[str] = None
     notes: Optional[str] = None
+    commissioning_data: Optional[Any] = None
 
 class InstallationRecordCreate(InstallationRecordBase):
     order_id: UUID
@@ -107,3 +131,4 @@ class InstallationRecordResponse(InstallationRecordBase):
     order_id: UUID
     installation_date: datetime
     model_config = {"from_attributes": True}
+

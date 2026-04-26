@@ -1,7 +1,7 @@
 import enum
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Text, Boolean, DateTime, ForeignKey, Enum, JSON, func
+from sqlalchemy import Column, String, Text, Boolean, DateTime, ForeignKey, Enum, JSON, Integer, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from models.base import Base
@@ -14,11 +14,11 @@ class OrderStatus(enum.Enum):
     customer_profiled = 'customer_profiled'
     machine_arrived = 'machine_arrived'
     material_verified = 'material_verified'
-    installed = 'installed'
+    commissioned = 'commissioned'
 
 class MachineStatus(enum.Enum):
     in_transit = 'in_transit'
-    installed = 'installed'
+    commissioned = 'commissioned'
     under_maintenance = 'under_maintenance'
     decommissioned = 'decommissioned'
 
@@ -47,6 +47,7 @@ class Customer(Base):
     address = Column(Text)
     city = Column(String(100))
     state = Column(String(100))
+    pincode = Column(String(20))
     phone = Column(String(50))
     email = Column(String(255))
     gst = Column(String(50))
@@ -54,6 +55,20 @@ class Customer(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     orders = relationship("Order", back_populates="customer", cascade="all, delete-orphan")
+    contacts = relationship("CustomerContact", back_populates="customer", cascade="all, delete-orphan")
+
+
+class CustomerContact(Base):
+    __tablename__ = "customer_contacts"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String(255), nullable=False)
+    phone = Column(String(50))
+    designation = Column(String(100))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    customer = relationship("Customer", back_populates="contacts")
 
 
 class Order(Base):
@@ -66,7 +81,7 @@ class Order(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     customer = relationship("Customer", back_populates="orders")
-    machine = relationship("Machine", uselist=False, back_populates="order", cascade="all, delete-orphan")
+    machines = relationship("Machine", uselist=True, back_populates="order", cascade="all, delete-orphan")
     production_chart = relationship("ProductionChart", uselist=False, back_populates="order", cascade="all, delete-orphan")
     ancillary_equipment = relationship("AncillaryEquipment", uselist=False, back_populates="order", cascade="all, delete-orphan")
     site_verification = relationship("SiteVerification", uselist=False, back_populates="order", cascade="all, delete-orphan")
@@ -79,10 +94,17 @@ class Machine(Base):
     __tablename__ = "machines"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    order_id = Column(UUID(as_uuid=True), ForeignKey("orders.id", ondelete="CASCADE"), unique=True, nullable=False)
+    order_id = Column(UUID(as_uuid=True), ForeignKey("orders.id", ondelete="CASCADE"), nullable=False)
     serial_number = Column(String(255), unique=True, nullable=False)
     model = Column(String(255), nullable=False)
     vendor = Column(String(255))
+    dia = Column(String(100))
+    gauge = Column(String(100))
+    feeders = Column(String(100))
+    commissioning_date = Column(DateTime(timezone=True))
+    motor_hp = Column(String(100))
+    inverter_capacity = Column(String(100))
+    input_voltage = Column(String(100))
     installation_date = Column(DateTime(timezone=True))
     warranty_start = Column(DateTime(timezone=True))
     warranty_end = Column(DateTime(timezone=True))
@@ -103,6 +125,11 @@ class ProductionChart(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     order_id = Column(UUID(as_uuid=True), ForeignKey("orders.id", ondelete="CASCADE"), unique=True, nullable=False)
+    chart_ref_no = Column(String(100))
+    machines = Column(JSONB, default=list) # [{machine_model, quantity, machine_description}]
+    unit = Column(String(10), default='nos')  # nos | g | l
+    accessories = Column(JSONB, default=list)
+    requirements = Column(JSONB, default=list)
     notes = Column(Text)
     chart_data = Column(JSONB)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -152,6 +179,7 @@ class MaterialVerification(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     order_id = Column(UUID(as_uuid=True), ForeignKey("orders.id", ondelete="CASCADE"), unique=True, nullable=False)
     is_verified = Column(Boolean, default=False)
+    checklist = Column(JSONB, default=list)  # [{item, category, checked}]
     notes = Column(Text)
     verified_at = Column(DateTime(timezone=True))
 
@@ -164,6 +192,7 @@ class InstallationRecord(Base):
     order_id = Column(UUID(as_uuid=True), ForeignKey("orders.id", ondelete="CASCADE"), unique=True, nullable=False)
     installed_by = Column(String(255))
     notes = Column(Text)
+    commissioning_data = Column(JSONB, default=list)
     installation_date = Column(DateTime(timezone=True), server_default=func.now())
 
     order = relationship("Order", back_populates="installation_record")
@@ -174,6 +203,19 @@ class ServiceCall(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     machine_id = Column(UUID(as_uuid=True), ForeignKey("machines.id", ondelete="CASCADE"), nullable=False)
+
+    # New fields for service call report
+    customer_name = Column(String(255))
+    visit_date = Column(DateTime(timezone=True))
+    purpose_of_visit = Column(String(100))
+    machine_reference = Column(JSONB, default=list)
+    observation = Column(Text)
+    corrective_measures = Column(Text)
+    remarks = Column(Text)
+    service_engg_name = Column(String(255))
+    to_be_attended_on = Column(DateTime(timezone=True))
+    attended_on = Column(DateTime(timezone=True))
+
     is_warranty = Column(Boolean, default=False)
     department = Column(Enum(ServiceDepartment), nullable=False)
     error_description = Column(Text, nullable=False)

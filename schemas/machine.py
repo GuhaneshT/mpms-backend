@@ -9,6 +9,13 @@ class MachineBase(BaseModel):
     serial_number: str
     model: str
     vendor: Optional[str] = None
+    dia: Optional[str] = None
+    gauge: Optional[str] = None
+    feeders: Optional[str] = None
+    commissioning_date: Optional[datetime] = None
+    motor_hp: Optional[str] = None
+    inverter_capacity: Optional[str] = None
+    input_voltage: Optional[str] = None
     installation_date: Optional[datetime] = None
     warranty_start: Optional[datetime] = None
     warranty_end: Optional[datetime] = None
@@ -19,6 +26,13 @@ class MachineCreate(MachineBase):
 
 class MachineUpdate(BaseModel):
     status: Optional[MachineStatus] = None
+    dia: Optional[str] = None
+    gauge: Optional[str] = None
+    feeders: Optional[str] = None
+    commissioning_date: Optional[datetime] = None
+    motor_hp: Optional[str] = None
+    inverter_capacity: Optional[str] = None
+    input_voltage: Optional[str] = None
     installation_date: Optional[datetime] = None
     warranty_start: Optional[datetime] = None
     warranty_end: Optional[datetime] = None

@@ -9,12 +9,12 @@ class OrderStatus(str, enum.Enum):
     customer_profiled = 'customer_profiled'
     machine_arrived = 'machine_arrived'
     material_verified = 'material_verified'
-    installed = 'installed'
+    commissioned = 'commissioned'
 
 
 class MachineStatus(str, enum.Enum):
     in_transit = 'in_transit'
-    installed = 'installed'
+    commissioned = 'commissioned'
     under_maintenance = 'under_maintenance'
     decommissioned = 'decommissioned'
 
