@@ -6,7 +6,8 @@ from typing import List
 from database.session import get_supabase
 from schemas.machine import MachineCreate, MachineUpdate, MachineResponse
 from services.machine import MachineService
-from api.deps import get_current_user
+from api.deps import require_permissions
+from core.rbac import Permission
 
 router = APIRouter(prefix="/machines", tags=["Machines"])
 
@@ -14,7 +15,7 @@ router = APIRouter(prefix="/machines", tags=["Machines"])
 def create_machine(
     machine_in: MachineCreate,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.MACHINES_WRITE))
 ):
     service = MachineService(client)
     return service.create_machine(machine_in)
@@ -24,7 +25,7 @@ def get_machines(
     skip: int = 0,
     limit: int = 100,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.MACHINES_READ))
 ):
     service = MachineService(client)
     return service.get_machines(skip=skip, limit=limit)
@@ -33,7 +34,7 @@ def get_machines(
 def get_machine(
     machine_id: UUID,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.MACHINES_READ))
 ):
     service = MachineService(client)
     return service.get_machine(machine_id)
@@ -43,7 +44,7 @@ def update_machine(
     machine_id: UUID,
     machine_in: MachineUpdate,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.MACHINES_WRITE))
 ):
     service = MachineService(client)
     return service.update_machine(machine_id, machine_in)
@@ -52,7 +53,7 @@ def update_machine(
 def delete_machine(
     machine_id: UUID,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.MACHINES_WRITE))
 ):
     service = MachineService(client)
     service.delete_machine(machine_id)

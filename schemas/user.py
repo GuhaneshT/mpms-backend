@@ -1,13 +1,17 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional, Dict, Any
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, EmailStr, Field
 
 class UserProfile(BaseModel):
     sub: str
-    email: EmailStr
-    app_metadata: Dict[str, Any]
-    user_metadata: Dict[str, Any]
-    aud: str
-    role: Optional[str] = None
+    email: Optional[EmailStr] = None
+    app_metadata: Dict[str, Any] = Field(default_factory=dict)
+    user_metadata: Dict[str, Any] = Field(default_factory=dict)
+    aud: Optional[str] = None
+    role: str
+    role_source: Optional[str] = None
+    display_name: Optional[str] = None
+    permissions: List[str] = Field(default_factory=list)
 
 class UserUpdate(BaseModel):
     full_name: Optional[str] = None

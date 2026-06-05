@@ -3,7 +3,8 @@ from supabase import Client
 from datetime import datetime, timedelta, timezone
 
 from database.session import get_supabase
-from api.deps import get_current_user
+from api.deps import require_permissions
+from core.rbac import Permission
 from schemas.dashboard import DashboardSummary, DashboardReliability, ReliabilityStat
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
@@ -11,7 +12,7 @@ router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 @router.get("/summary", response_model=DashboardSummary)
 def get_dashboard_summary(
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.DASHBOARD_READ))
 ):
     now = datetime.now(timezone.utc).isoformat()
     thirty_days_from_now = (datetime.now(timezone.utc) + timedelta(days=30)).isoformat()
@@ -52,7 +53,7 @@ def get_dashboard_summary(
 @router.get("/reliability", response_model=DashboardReliability)
 def get_machine_reliability(
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.DASHBOARD_READ))
 ):
     """
     Get machine reliability stats: failure counts grouped by model.

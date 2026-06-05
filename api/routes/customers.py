@@ -6,7 +6,8 @@ from typing import List
 from database.session import get_supabase
 from schemas.customer import CustomerCreate, CustomerUpdate, CustomerResponse, CustomerContactCreate, CustomerContactResponse
 from services.customer import CustomerService
-from api.deps import get_current_user
+from api.deps import require_permissions
+from core.rbac import Permission
 
 router = APIRouter(prefix="/customers", tags=["Customers"])
 
@@ -14,7 +15,7 @@ router = APIRouter(prefix="/customers", tags=["Customers"])
 def create_customer(
     customer_in: CustomerCreate,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.CUSTOMERS_WRITE))
 ):
     service = CustomerService(client)
     return service.create_customer(customer_in)
@@ -24,7 +25,7 @@ def get_customers(
     skip: int = 0,
     limit: int = 100,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.CUSTOMERS_READ))
 ):
     service = CustomerService(client)
     return service.get_customers(skip=skip, limit=limit)
@@ -33,7 +34,7 @@ def get_customers(
 def get_customer(
     customer_id: UUID,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.CUSTOMERS_READ))
 ):
     service = CustomerService(client)
     return service.get_customer(customer_id)
@@ -43,7 +44,7 @@ def update_customer(
     customer_id: UUID,
     customer_in: CustomerUpdate,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.CUSTOMERS_WRITE))
 ):
     service = CustomerService(client)
     return service.update_customer(customer_id, customer_in)
@@ -52,7 +53,7 @@ def update_customer(
 def delete_customer(
     customer_id: UUID,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.CUSTOMERS_WRITE))
 ):
     service = CustomerService(client)
     service.delete_customer(customer_id)
@@ -64,7 +65,7 @@ def delete_customer(
 def list_contacts(
     customer_id: UUID,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.CUSTOMERS_READ))
 ):
     return CustomerService(client).list_contacts(customer_id)
 
@@ -73,7 +74,7 @@ def add_contact(
     customer_id: UUID,
     contact_in: CustomerContactCreate,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.CUSTOMERS_WRITE))
 ):
     return CustomerService(client).add_contact(customer_id, contact_in)
 
@@ -82,7 +83,6 @@ def remove_contact(
     customer_id: UUID,
     contact_id: UUID,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.CUSTOMERS_WRITE))
 ):
     CustomerService(client).remove_contact(customer_id, contact_id)
-

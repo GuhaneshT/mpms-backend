@@ -6,7 +6,8 @@ from typing import List
 from database.session import get_supabase
 from schemas.order import OrderCreate, OrderUpdate, OrderResponse
 from services.order import OrderService
-from api.deps import get_current_user
+from api.deps import require_permissions
+from core.rbac import Permission
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
@@ -14,7 +15,7 @@ router = APIRouter(prefix="/orders", tags=["Orders"])
 def create_order(
     order_in: OrderCreate,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.ORDERS_WRITE))
 ):
     service = OrderService(client)
     return service.create_order(order_in)
@@ -24,7 +25,7 @@ def get_orders(
     skip: int = 0,
     limit: int = 100,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.ORDERS_READ))
 ):
     service = OrderService(client)
     return service.get_orders(skip=skip, limit=limit)
@@ -33,7 +34,7 @@ def get_orders(
 def get_order(
     order_id: UUID,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.ORDERS_READ))
 ):
     service = OrderService(client)
     return service.get_order(order_id)
@@ -43,7 +44,7 @@ def update_order(
     order_id: UUID,
     order_in: OrderUpdate,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.ORDERS_WRITE))
 ):
     service = OrderService(client)
     return service.update_order(order_id, order_in)
@@ -52,7 +53,7 @@ def update_order(
 def delete_order(
     order_id: UUID,
     client: Client = Depends(get_supabase),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(require_permissions(Permission.ORDERS_WRITE))
 ):
     service = OrderService(client)
     service.delete_order(order_id)
